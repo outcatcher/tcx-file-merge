@@ -16,11 +16,13 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(lh)
 
 
-def merge(file1="input/2016_06_25__16_51.tcx", file2="input/7169691758851211.tcx", out_file="output/result.tcx"):
+def merge(file1="input/2016_06_25__16_51.tcx", file2="input/7169691758851211.tcx",
+          out_file="output/result.tcx"):
     file1_root = etree.parse(file1).getroot()
     file2_root = etree.parse(file2).getroot()
 
-    header_tags = {'TotalTimeSeconds', 'DistanceMeters', 'MaximumSpeed', 'Calories', 'AverageHeartRateBpm',
+    header_tags = {'TotalTimeSeconds', 'DistanceMeters', 'MaximumSpeed', 'Calories',
+                   'AverageHeartRateBpm',
                    'MaximumHeartRateBpm', 'Intensity'}
     time_format = '%Y-%m-%dT%H:%M:%SZ'
     time_format2 = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -148,7 +150,8 @@ def merge(file1="input/2016_06_25__16_51.tcx", file2="input/7169691758851211.tcx
 
     lap_path = add_ns('.//Lap', default_ns)
     lap_time = min(get_lap_time(file1_root.find(lap_path)), get_lap_time(file2_root.find(lap_path)))
-    activity_id = format_time(get_point_time(track_points_all[0]) - 60)  # not duplicating activity in strava
+    activity_id = format_time(
+        get_point_time(track_points_all[0]) - 60)  # not duplicating activity in strava
     lap_start = format_time(lap_time)
 
     head = []
@@ -183,10 +186,11 @@ def merge(file1="input/2016_06_25__16_51.tcx", file2="input/7169691758851211.tcx
         )
     )
 
-    basic = etree.tostring(basic, pretty_print=False, encoding="UTF-8", xml_declaration=True).replace('xsi:type',
-                                                                                                      'type')
+    basic = etree \
+        .tostring(basic, pretty_print=False, encoding="UTF-8", xml_declaration=True) \
+        .replace(b'xsi:type', b'type')
 
-    with open(out_file, 'w+') as o:
+    with open(out_file, 'wb+') as o:
         o.write(basic)
 
 
